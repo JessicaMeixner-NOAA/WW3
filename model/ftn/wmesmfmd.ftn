@@ -4619,8 +4619,6 @@
       real(ESMF_KIND_RX), pointer :: dptr1(:)
       real(ESMF_KIND_RX), pointer :: dptr2(:,:)
       real(ESMF_KIND_RX), pointer :: dptr3(:,:,:)
-      character(ESMF_MAXSTR) :: cname
-      type(ESMF_GridComp) :: gcomp
       integer, parameter :: iwt=10
       real(8) :: wstime, wftime
 !
@@ -4630,10 +4628,6 @@
       if (present(rc)) rc = ESMF_SUCCESS
 
       call ESMF_VMWtime(wstime)
-      call ESMF_GridCompGet(gcomp, name=cname, rc=rc)
-      if (ESMF_LogFoundError(rc, PASSTHRU)) return
-      if (verbosity.gt.0) call ESMF_LogWrite(trim(cname)// &
-        ': entered FieldFill', ESMF_LOGMSG_INFO)
 
       call ESMF_FieldGet(field, localDECount=ldecnt, rank=rank, rc=rc)
       if (ESMF_LogFoundError(rc, PASSTHRU)) return ! bail out
@@ -4671,9 +4665,6 @@
 
       wtime(iwt) = wtime(iwt) + wftime - wstime
       wtcnt(iwt) = wtcnt(iwt) + 1
-      if (verbosity.gt.0) call ESMF_LogWrite(trim(cname)// &
-        ': leaving FieldFill', ESMF_LOGMSG_INFO)
-
 !/
 !/ End of FieldFill ------------------------------------------------- /
 !/
@@ -4752,7 +4743,6 @@
       real(ESMF_KIND_RX) :: floc(n1,n2)
       real(ESMF_KIND_RX) :: floc1d(n1), floc1dary(n1*n2)
 !/PDLIB      real(ESMF_KIND_R8), pointer :: fldptr(:)
-      type(ESMF_GridComp) :: gcomp
       integer, parameter :: iwt=9
       real(8) :: wstime, wftime
 !
@@ -4762,10 +4752,6 @@
       if (present(rc)) rc = ESMF_SUCCESS
 
       call ESMF_VMWtime(wstime)
-      call ESMF_GridCompGet(gcomp, name=cname, rc=rc)
-      if (ESMF_LogFoundError(rc, PASSTHRU)) return
-      if (verbosity.gt.0) call ESMF_LogWrite(trim(cname)// &
-        ': entered FieldGather', ESMF_LOGMSG_INFO)
 
 !      call ESMF_FieldWrite(field,fileName="ww3_import_dump.nc",overwrite=.true.,rc=rc)
       if ( (GTYPE.eq.RLGTYPE).or.(GTYPE.eq.CLGTYPE) ) then
@@ -4823,8 +4809,6 @@
       call ESMF_VMWtime(wftime)
       wtime(iwt) = wtime(iwt) + wftime - wstime
       wtcnt(iwt) = wtcnt(iwt) + 1
-      if (verbosity.gt.0) call ESMF_LogWrite(trim(cname)// &
-        ': leaving FieldGather', ESMF_LOGMSG_INFO)
 
 !/
 !/ End of FieldGather ------------------------------------------------ /
