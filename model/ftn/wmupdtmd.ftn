@@ -170,6 +170,7 @@
                           IDINP, IFLSTI, IFLSTL
 !/
       IMPLICIT NONE
+!/MPI      INCLUDE "mpif.h"
 !/
 !/ ------------------------------------------------------------------- /
 !/ Parameter list
@@ -180,6 +181,7 @@
 !/ ------------------------------------------------------------------- /
 !/ Local parameters
 !/
+      REAL*8                  :: JDMstart, JDMfinish
       INTEGER                 :: MDSEN, J, DTIME(2), IERR, NDTNEW, JJ
 !/S      INTEGER, SAVE           :: IENT = 0
       REAL                    :: DTTST
@@ -204,6 +206,7 @@
 !/S      CALL STRACE (IENT, 'WMUPDT')
 !/T      WRITE (MDST,9000) IMOD, TDATA
 !
+      JDMstart=MPI_wtime()
       IF ( IMPROC .EQ. NMPERR ) THEN
           MDSEN  = MDSE
         ELSE
@@ -402,6 +405,10 @@
 !/T      WRITE (MDST,9073) 7, IDINP(IMOD,7), INFLAGS1(7), T2N, TDN
 !/T      WRITE (MDST,9072) 8, 'MOV'        , INFLAGS1(8), TG0, TGN
 !
+
+      JDMfinish=MPI_wtime()
+      write(*,*) 'JDM Time in WMUPDT', IMPROC, JDMfinish - JDMstart
+
       RETURN
 !       
 ! Error escape locations
@@ -524,6 +531,8 @@
                           DATA2, NMV, NMVMAX, TMV, AMV, DMV
 !/
       IMPLICIT NONE
+!/MPI      INCLUDE "mpif.h"
+
 !/
 !/ ------------------------------------------------------------------- /
 !/ Parameter list
@@ -535,6 +544,7 @@
 !/ ------------------------------------------------------------------- /
 !/ Local parameters
 !/
+      REAL*8                  :: JDMstart, JDMfinish
       INTEGER                 :: MDSEN, DTIME(2), NDTNEW
       REAL                    :: XXX(NY,NX)
 !/S      INTEGER, SAVE           :: IENT = 0
@@ -543,6 +553,7 @@
 ! 0.  Initialization
 ! 0.a Subroutine tracing and echo of input
 !
+      JDMstart=MPI_wtime()
 !/S      CALL STRACE (IENT, 'WMUPD1')
 !/T      WRITE (MDST,9000) IMOD, J
 !
@@ -720,6 +731,10 @@
 !
 ! 9. End of routine -------------------------------------------------- /
 !
+      JDMfinish=MPI_wtime()
+      write(*,*) 'JDM Time in WMUPD1', IMPROC, JDMfinish - JDMstart
+
+
       RETURN
 !
 ! Formats
@@ -809,6 +824,7 @@
                           MDSO, ETIME, IDINP
 !/
       IMPLICIT NONE
+!/MPI      INCLUDE "mpif.h"
 !/
 !/ ------------------------------------------------------------------- /
 !/ Parameter list
@@ -819,6 +835,7 @@
 !/ ------------------------------------------------------------------- /
 !/ Local parameters
 !/
+      REAL*8                  :: JDMstart, JDMfinish
       INTEGER                 :: ICONSC, ICONSW
 !/S      INTEGER, SAVE           :: IENT = 0
 !/
@@ -826,6 +843,7 @@
 ! 0.  Initialization
 ! 0.a Subroutine tracing and echo of input
 !
+      JDMstart=MPI_wtime()
 !/S      CALL STRACE (IENT, 'WMUPD2')
 !
 !/T      WRITE (MDST,9000) IMOD, J, JMOD
@@ -1013,6 +1031,9 @@
             END IF
 !
       END SELECT
+
+      JDMfinish=MPI_wtime()
+      write(*,*) 'JDM Time in WMUPD2', IMPROC, JDMfinish - JDMstart
 !
 ! 4. End of routine -------------------------------------------------- /
 !
@@ -1134,6 +1155,8 @@
                           MDSS
 !/
       IMPLICIT NONE
+!/MPI      INCLUDE "mpif.h"
+
 !/
 !/ ------------------------------------------------------------------- /
 !/ Parameter list
@@ -1177,12 +1200,14 @@
                                  YGRDC(:,:), HPFACI(:,:), HQFACI(:,:) !RP
 
       INTEGER, POINTER        :: ICLOSE
+      REAL*8                  :: JDMstart, JDMfinish
 !/T1      CHARACTER(LEN=17)       :: FORMAT1
 !/
 !/ ------------------------------------------------------------------- /
 ! 0.  Initialization
 ! 0.a Subroutine tracing and test output
 !
+      JDMstart=MPI_wtime()
 !/S      CALL STRACE (IENT, 'WMUPDV')
 !
 
@@ -1668,6 +1693,9 @@
 ! 3. End of routine -------------------------------------------------- /
 !
       DEALLOCATE ( NXA, NYA, RXA, RYA )
+
+      JDMfinish=MPI_wtime()
+      write(*,*) 'JDM Time in WMUPDV', IMPROC, JDMfinish - JDMstart
 !
       RETURN
 !
@@ -1777,6 +1805,7 @@
                           MDSS
 !/
       IMPLICIT NONE
+!/MPI      INCLUDE "mpif.h"
 !/
 !/ ------------------------------------------------------------------- /
 !/ Parameter list
@@ -1818,12 +1847,14 @@
 
       REAL, POINTER           :: X0I, Y0I, SXI, SYI !RPXXX , HPFACI, HQFACI
       INTEGER, POINTER        :: ICLOSE
+      REAL*8                  :: JDMstart, JDMfinish
 !/T1      CHARACTER(LEN=17)       :: FORMAT1
 !/
 !/ ------------------------------------------------------------------- /
 ! 0.  Initialization
 ! 0.a Subroutine tracing and test output
 !
+      JDMstart=MPI_wtime()
 !/S      CALL STRACE (IENT, 'WMUPDS')
 !
       NXI    => GRIDS(JMOD)%NX
@@ -2253,6 +2284,9 @@
 !
       DEALLOCATE ( NXA, NYA, RXA, RYA )
 !
+      JDMfinish=MPI_wtime()
+      write(*,*) 'JDM Time in WMUPDS', IMPROC, JDMfinish - JDMstart
+
       RETURN
 !
 ! Formats
@@ -2336,7 +2370,9 @@
 !     -
 !
 !  7. Source code :
+!/MPI      INCLUDE "mpif.h"
 
+      REAL*8                  :: JDMstart, JDMfinish
       INTEGER, INTENT(IN) :: LENGTH
       REAL, DIMENSION(LENGTH), INTENT(IN) :: ARRAY
       REAL, INTENT(IN) :: VALUE
@@ -2346,7 +2382,7 @@
 
       INTEGER :: LEFT, MIDDLE, RIGHT
       
-      
+      JDMstart=MPI_wtime() 
       LEFT = 1
       RIGHT = LENGTH
       DO
@@ -2364,6 +2400,8 @@
           END IF
       END DO
       XYCURVISEARCH = RIGHT
+      JDMfinish=MPI_wtime()
+      write(*,*) 'JDM Time in XYCURVISEARCH', IMPROC, JDMfinish - JDMstart
 
       END FUNCTION XYCURVISEARCH
 !  End of function -------------------------------------------------- /
@@ -2452,6 +2490,7 @@
       ! BY XARRAY WITH DIMENSION X_LEN 
       ! AND THE GRID Y VALUES SPECIFIED BY YARRAY WITH DIMENSION Y_LEN
 !
+!/MPI      INCLUDE "mpif.h"
       INTEGER, INTENT(IN) :: X_LEN, Y_LEN
       REAL, DIMENSION(X_LEN), INTENT(IN) :: XARRAY
       REAL, DIMENSION(Y_LEN), INTENT(IN) :: YARRAY
@@ -2460,6 +2499,10 @@
       REAL, INTENT(IN), OPTIONAL :: DELTA
       REAL :: DENOM, X1, X2, Y1, Y2
       INTEGER :: INX,JNX
+      REAL*8                  :: JDMstart, JDMfinish
+
+
+      JDMstart=MPI_wtime()
 
       INX = XYCURVISEARCH(X_LEN, XARRAY, X, DELTA)
       JNX = XYCURVISEARCH(Y_LEN, YARRAY, Y, DELTA)
@@ -2482,6 +2525,9 @@
                      FUNC(INX+1,JNX)*(X-X1)*(Y2-Y) +         &
                      FUNC(INX,JNX+1)*(X2-X)*(Y-Y1)+          &
                      FUNC(INX+1, JNX+1)*(X-X1)*(Y-Y1))/DENOM
+      JDMfinish=MPI_wtime()
+      write(*,*) 'JDM Time in INTERPOLATE', IMPROC, JDMfinish -JDMstart
+
 !
       END FUNCTION INTERPOLATE
 
@@ -2568,6 +2614,7 @@
 !
 ! 10. Source code :
 !
+!/MPI      INCLUDE "mpif.h"
       INTEGER, INTENT(IN) :: X_LEN, Y_LEN
       REAL, DIMENSION(X_LEN), INTENT(IN) :: XARRAY
       REAL, DIMENSION(Y_LEN), INTENT(IN) :: YARRAY
@@ -2578,7 +2625,10 @@
 
       REAL :: DENOM, X1, X2, Y1, Y2,C1,C2,C3,C4
       INTEGER :: INX,JNX
+      REAL*8                  :: JDMstart, JDMfinish
 
+
+      JDMstart=MPI_wtime()
       INX = XYCURVISEARCH(X_LEN, XARRAY, X, DELTA)
       JNX = XYCURVISEARCH(Y_LEN, YARRAY, Y, DELTA)
 !
@@ -2605,6 +2655,9 @@
       VAL2 = (FUNC2(INX,JNX)  *C1 + FUNC2(INX+1,JNX)  *C2 +  &
               FUNC2(INX,JNX+1)*C3 + FUNC2(INX+1,JNX+1)*C4)/DENOM
 !
+      JDMfinish=MPI_wtime()
+      write(*,*) 'JDM Time in INTERPOLATED2D', IMPROC, JDMfinish - JDMstart
+
       END SUBROUTINE INTERPOLATE2D
 !====================================================================
 
@@ -2632,6 +2685,7 @@
       ! IN X AND Y
 
       !IMPLICIT NONE
+!/MPI      INCLUDE "mpif.h"
       INTEGER  X_LEN, Y_LEN, INXEND, INYEND, NPX,NPY
       REAL, DIMENSION(X_LEN) :: XARRAY
       REAL, DIMENSION(Y_LEN)  :: YARRAY
@@ -2641,7 +2695,10 @@
       REAL :: X1, X2, Y1, Y2, SUM
       INTEGER :: INX,INY, INITIALX, INITIALY
       INTEGER :: INFINX, INFINY,ICOUNT,I,J
+      REAL*8                  :: JDMstart, JDMfinish
 
+
+      JDMstart=MPI_wtime()
       INX = XYCURVISEARCH(X_LEN, XARRAY, X)
       INY = XYCURVISEARCH(Y_LEN, YARRAY, Y)
 
@@ -2688,6 +2745,9 @@
         END DO
       END DO
       AVERAGING=SUM/REAL(ICOUNT)
+
+      JDMfinish=MPI_wtime()
+      write(*,*) 'JDM Time in AVERAGING', IMPROC, JDMfinish - JDMstart
 
       END FUNCTION AVERAGING
 
