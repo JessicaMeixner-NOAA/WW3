@@ -529,17 +529,20 @@
             IF ( UA0(ISEA) .GT. 1.E-7) THEN
                 D0     = MOD ( TPI+ATAN2(WY0(IX,IY),WX0(IX,IY)) , TPI )
               ELSE
+                !write(*,*) 'JDM UAO ISEA', ISEA
                 D0     = 0
               END IF
             IF ( UAI(ISEA) .GT. 1.E-7) THEN
                 DN     = MOD ( TPI+ATAN2(WYN(IX,IY),WXN(IX,IY)) , TPI )
               ELSE
-                DN     = D0
+                !write(*,*) 'JDM UAI ISEA', ISEA
+                DN     = 0 !D0
               END IF
             IF ( UA0(ISEA) .GT. 1.E-7) THEN
                 UD0(ISEA) = D0
               ELSE
-                UD0(ISEA) = DN
+                !write(*,*) 'JDM JD0 ISEA', ISEA
+                UD0(ISEA) = 0 !DN
               END IF
             DD     = DN - UD0(ISEA)
             IF (ABS(DD).GT.PI) DD = DD - TPI*SIGN(1.,DD)
@@ -601,6 +604,7 @@
 !/RWND      IF ( FLCUR ) THEN
 !
 !/RWND          DO ISEA=1, NSEA
+!/RWND            UD(ISEA) = MOD ( TPI+UD(ISEA), TPI )
 !/RWND            UXR        = UA(ISEA)*COS(UD(ISEA)) - RWINDC*CX(ISEA)
 !/RWND            UYR        = UA(ISEA)*SIN(UD(ISEA)) - RWINDC*CY(ISEA)
 !/RWND            U10 (ISEA) = MAX ( 0.001 , SQRT(UXR**2+UYR**2) )
@@ -613,8 +617,9 @@
 !
           DO ISEA=1, NSEA
             U10 (ISEA) = MAX ( UA(ISEA) , 0.001 )
+            UD(ISEA) = MOD ( TPI+UD(ISEA), TPI )
             U10D(ISEA) = UD(ISEA)
-            END DO
+          END DO
 !
 !/OMPG/!$OMP END PARALLEL DO
 !

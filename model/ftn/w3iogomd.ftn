@@ -2634,6 +2634,8 @@
           IF ( WRITE ) THEN
               OPEN (NDSOG,FILE=FNMPRE(:J)//TIMETAG//'.out_grd.'  &
                     //FILEXT(:I),FORM='UNFORMATTED',ERR=800,IOSTAT=IERR)
+              OPEN(586,FILE=FNMPRE(:J)//TIMETAG//'.out_txt.'  &
+                    //FILEXT(:I),FORM='FORMATTED',ERR=800,IOSTAT=IERR)
           ELSE
               OPEN (NDSOG,FILE=FNMPRE(:J)//'out_grd.'//FILEXT(:I),    &
                     FORM='UNFORMATTED',ERR=800,IOSTAT=IERR,STATUS='OLD')
@@ -2892,12 +2894,19 @@
 !/ARC                        UDARC = UD(ISEA) - ANGARC(ISEA - NGLO)*DERA
 !/ARC                        UD(ISEA) = MOD(TPI + UDARC, TPI)
 !/ARC                      ENDIF
+                       write(586,*) 'ISEA', ISEA
                       IF (UA(ISEA) .NE.UNDEF) THEN
                           AUX1(ISEA) = UA(ISEA)*COS(UD(ISEA))
                           AUX2(ISEA) = UA(ISEA)*SIN(UD(ISEA))
+                          write(586,*) 'UA', UA(ISEA)
+                          write(586,*) 'UD', UD(ISEA)
+                          write(586,*) 'AUX1', AUX1(ISEA)
+                          write(586,*) 'AUX2', AUX2(ISEA)
                        ELSE
                         AUX1(ISEA) = UNDEF
                         AUX2(ISEA) = UNDEF
+                          write(586,*) 'AUX1', AUX1(ISEA)
+                          write(586,*) 'AUX2', AUX2(ISEA)
                        END IF
                       END DO
                     WRITE ( NDSOG ) AUX1
@@ -3495,6 +3504,7 @@
       IF ( WRITE ) CALL FLUSH ( NDSOG )
 !
       IF(OFILES(1) .EQ. 1) CLOSE(NDSOG)
+      CLOSE(586)
 !
 !/MPI      CALL W3SETA ( IGRD, NDSE, NDST )
 !
