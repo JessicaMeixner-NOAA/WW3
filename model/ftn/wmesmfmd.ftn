@@ -5444,7 +5444,7 @@
       logical, save :: firstCall = .true.
       integer :: isea, jsea
       real    :: emean, fmean, fmean1, wnmean, amax, ustar, ustdr, &
-                 tauwx, tauwy, cd, z0, fmeanws
+                 tauwx, tauwy, cd, z0, fmeanws, dlwmean
       logical :: llws(nspec)
       type(ESMF_Field) :: chknField
       real(ESMF_KIND_RX), pointer :: chkn(:)
@@ -5484,7 +5484,8 @@
 !/ST4            call w3spr4( va(:,jsea), cg(1:nk,isea), wn(1:nk,isea),   &
 !/ST4                         emean, fmean, fmean1, wnmean, amax,         &
 !/ST4                         u10(isea), u10d(isea), ustar, ustdr, tauwx, &
-!/ST4                         tauwy, cd, z0, charn(jsea), llws, fmeanws )
+!/ST4                         tauwy, cd, z0, charn(jsea), llws, fmeanws,  & 
+!/ST4                         dlwmean )
           endif !firstCall
           chkn(jsea) = charn(jsea)
         enddo jsea_loop
@@ -5572,7 +5573,7 @@
       logical, save :: firstCall = .true.
       integer :: isea, jsea
       real    :: emean, fmean, fmean1, wnmean, amax, ustar, ustdr, &
-                 tauwx, tauwy, cd, z0, fmeanws
+                 tauwx, tauwy, cd, z0, fmeanws, dlwmean
       logical :: llws(nspec)
       type(ESMF_Field) :: wrlnField
       real(ESMF_KIND_RX), pointer :: wrln(:)
@@ -5612,7 +5613,8 @@
 !/ST4            call w3spr4( va(:,jsea), cg(1:nk,isea), wn(1:nk,isea),   &
 !/ST4                         emean, fmean, fmean1, wnmean, amax,         &
 !/ST4                         u10(isea), u10d(isea), ustar, ustdr, tauwx, &
-!/ST4                         tauwy, cd, z0, charn(jsea), llws, fmeanws )
+!/ST4                         tauwy, cd, z0, charn(jsea), llws, fmeanws,  &
+!/ST4                         dlwmean )
           endif !firstCall
           wrln(jsea) = charn(jsea)*ust(isea)**2/grav
         enddo jsea_loop
