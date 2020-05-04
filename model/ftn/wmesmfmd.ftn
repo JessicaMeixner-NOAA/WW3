@@ -4733,6 +4733,7 @@
 
       enddo
 
+      call ESMF_VMWtime(wftime)
       wtime(iwt) = wtime(iwt) + wftime - wstime
       wtcnt(iwt) = wtcnt(iwt) + 1
 !/
