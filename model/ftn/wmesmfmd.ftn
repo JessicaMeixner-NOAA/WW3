@@ -6054,7 +6054,12 @@
 !/ST4                           tauwy, cd, z0, charn(jsea), llws, fmeanws,  &
 !/ST4                           dlwmean )
             endif !firstCall
-            wrln(jsea) = charn(jsea)*ust(isea)**2/grav
+            !wrln(jsea) = charn(jsea)*ust(isea)**2/grav
+            !Try the updated z0 calculation: 
+            !z0=0.11 vis / u* + (wave model derived z0)
+            ! vis is air molecular viscosity (1.4*e-5) and 
+            ! u* is the surface friction velocity
+            wrln(jsea) = 0.11*1.4e-5/ust(isea)+charn(jsea)*ust(isea)**2/grav
           endif 
         enddo jsea_loop
 
