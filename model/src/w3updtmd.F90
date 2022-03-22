@@ -1731,6 +1731,8 @@
                           NSPEC, FICEN
       USE W3WDATMD, ONLY: TIME, TICE, ICE, BERG, UST
       USE W3ADATMD, ONLY: NSEALM
+      USE W3GDATMD, ONLY: aalpha
+      USE W3ADATMD, ONLY: charn
       USE W3IDATMD, ONLY: TIN, ICEI, BERGI
       USE W3PARALL, ONLY: INIT_GET_JSEA_ISPROC
 !/
@@ -1803,6 +1805,7 @@
                                   ICEI(IX,IY), 'ICE (NEW)'
 #endif
                 VA(:,JSEA) = 0.
+                charn(jsea) = aalpha
 #ifdef W3_T
             ELSE
                 WRITE (NDST,9021) ISEA, IX, IY, MAPSTA(IY,IX),     &
@@ -1834,6 +1837,7 @@
                                       ICEI(IX,IY), 'SEA (NEW)'
 #endif
                     VA(:,JSEA) = 0.
+                    charn(jsea) = aalpha
 !
 #ifdef W3_T
                 ELSE
