@@ -567,6 +567,7 @@ CONTAINS
          SKIP_O, FLAG_O, FLDDIR, READBC,      &
          FLAG0 = .FALSE., FLOUTG, FLPFLD,     &
          FLPART, LOCAL, FLOUTG2
+    LOGICAL                 :: WRITE_RST
     !
 #ifdef W3_MPI
     LOGICAL                 :: FLGMPI(0:8)
@@ -2538,6 +2539,7 @@ CONTAINS
         !
         TOFRST(1) = -1
         TOFRST(2) =  0
+        WRITE_RST=.FALSE. 
         !
         DO J=1, NOTYPE
 
@@ -2614,8 +2616,13 @@ CONTAINS
                 !
                 CALL W3IOTR ( NDS(11), NDS(12), VA, IMOD )
               ELSE IF ( J .EQ. 4 ) THEN
-                CALL W3IORS ('HOT', NDS(6), XXX, IMOD, FLOUT(8) )
-                ITEST = RSTYPE
+                IF ( FLOUT(8) ) THEN
+                  !FLOUT(8) Then only have 1 call per time-step to W3IORS
+                  WRITE_RST=.TRUE. 
+                ELSE 
+                  CALL W3IORS ('HOT', NDS(6), XXX, IMOD, FLOUT(8) )
+                  ITEST = RSTYPE
+                END IF
               ELSE IF ( J .EQ. 5 ) THEN
                 IF ( IAPROC .EQ. NAPBPT ) THEN
 #ifdef W3_MPI
@@ -2701,7 +2708,7 @@ CONTAINS
           TOUT(:) = TONEXT(:,J)
           DTTST   = DSEC21 ( TIME, TOUT )
           IF ( DTTST .EQ. 0. ) THEN
-            CALL W3IORS ('HOT', NDS(6), XXX, IMOD, FLOUT(8) )
+            WRITE_RST=.TRUE. 
             ITEST = RSTYPE
             CALL TICK21 ( TOUT, DTOUT(J) )
             TONEXT(:,J) = TOUT
@@ -2733,6 +2740,9 @@ CONTAINS
             END IF
           END IF
         END IF
+        IF ( WRITE_RST ) THEN
+          CALL W3IORS ('HOT', NDS(6), XXX, IMOD, .TRUE. )
+        END IF 
         !        END OF CHECKPOINT
         !
         call print_memcheck(memunit, 'memcheck_____:'//' WW3_WAVE AFTER TIME LOOP 3')
