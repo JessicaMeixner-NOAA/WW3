@@ -269,18 +269,16 @@ CONTAINS
     CSVBLINE      = BLANK2
     !
     IPG1 = 0
-    IF (IOUT .EQ. 1) THEN
-      DO IP=1, NPTAB
-        HST(IP,1) = -99.9
-        TPT(IP,1) = -99.9
-        DMT(IP,1) = -99.9
-      ENDDO
-      DO IP=1, NPMAX
-        IYY(IP) = .FALSE.
-        IPI(IP)=1
-        ILEN(IP)=0
-      ENDDO
-    ENDIF
+    DO IP=1, NPTAB
+      HST(IP,1) = -99.9
+      TPT(IP,1) = -99.9
+      DMT(IP,1) = -99.9
+    ENDDO
+    DO IP=1, NPMAX
+      IYY(IP) = .FALSE.
+      IPI(IP)=1
+      ILEN(IP)=0
+    ENDDO
     !
     ! 3.  Get overall wave height ---------------------------------------- *
     !
