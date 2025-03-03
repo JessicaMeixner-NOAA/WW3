@@ -9,7 +9,7 @@
 !> @date 01-05-2022
 module wav_shel_inp
 
-  use w3odatmd, only: nogrp, ngrpp
+  use w3odatmd, only: nogrp, ngrpp, FNMGRD, FNMPNT, FNMRST
 
   implicit none
   private ! except
@@ -769,6 +769,14 @@ contains
              ( flh(10) .and. (nh(10).eq.0) ) ) goto 2007
 
       end if ! flhom
+
+      !--------------------
+      ! 2.7 User-defined directory
+      !--------------------
+
+      FNMGRD = trim(nml_output_path%grd_out)
+      FNMPNT = trim(nml_output_path%pnt_out)
+      FNMRST = trim(nml_output_path%rst_out)
 
     end if ! flgnml
 
