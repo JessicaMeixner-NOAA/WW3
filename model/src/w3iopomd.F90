@@ -1634,10 +1634,6 @@ CONTAINS
     ! unit number for log file
     INTEGER :: NDSOPLOG
 
-
-    ! INDICATOR LOG
-    INTEGER :: NDSOPLOG
-
     !If first pass, or if you are writting a file for every time-step: 
     IF ( IPASS.EQ.1  .OR. timestep_only.EQ.1 ) THEN 
       ! Create the netCDF file.
