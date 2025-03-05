@@ -108,6 +108,9 @@ contains
     character(len=1024) :: fname
     character(len=12)   :: vname
     character(len=16)   :: user_timestring    !YYYY-MM-DD-SSSSS
+    ! indicator logfile
+    character(len=256)  :: log_fname          ! log file name
+    integer             :: log_unit = 28888   ! unit number for log file
 
     integer :: n, xtid, ytid, xeid, ztid, stid, mtid, ptid, ktid, timid, nmode
     integer :: len_s, len_m, len_p, len_k
@@ -123,9 +126,11 @@ contains
     ! using user-defined directory (nml_output_path%grd_out)
     if (len_trim(user_histfname) == 0) then
       write(fname,'(a,i8.8,a1,i6.6,a)')trim(FNMGRD),timen(1),'.',timen(2),'.out_grd.ww3.nc'
+      write(log_fname,'(a,a,i8.8,a1,i6.6,a)')trim(FNMGRD),'log.',timen(1),'.',timen(2),'.out_grd.ww3.nc.txt'
     else
       call set_user_timestring(timen,user_timestring)
       fname = trim(FNMGRD)//trim(user_histfname)//trim(user_timestring)//'.nc'
+      log_fname = trim(FNMGRD)//'log.'//trim(user_histfname)//trim(user_timestring)//'.nc.txt'
     end if
 
     pioid%fh = -1
@@ -446,6 +451,15 @@ contains
     if (k_axis) call pio_freedecomp(pioid, iodesc3dk)
 
     call pio_closefile(pioid)
+
+    ! create indicator log file after NetCDF file is written
+    if (iaproc == 1) then   ! only root processor writes the log file
+      ! open the log file and write the complete message
+      open(unit=log_unit, file=trim(log_fname), form='FORMATTED')
+      write(log_unit, *) 'The '//trim(fname)//' file has been successfully written!'
+      call flush(log_unit)
+      close(log_unit)
+    end if
 
   end subroutine write_history
 
