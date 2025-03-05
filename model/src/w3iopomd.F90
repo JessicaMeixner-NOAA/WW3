@@ -1612,11 +1612,11 @@ CONTAINS
     integer, intent(in) :: timestep_only ! 1 if only timestep should be written.
     character(*), intent(in) :: filename
     integer, intent(inout) :: ncerr
-    ! indicator logfile
+    !
     INTEGER, INTENT(IN), OPTIONAL :: NDSOP
     CHARACTER(LEN=124), INTENT(IN), OPTIONAL :: fname
     CHARACTER(LEN=256), INTENT(IN), OPTIONAL :: path
-
+    !
     integer :: ndim, nvar, fmt, itime, fh
     integer :: d_nopts, d_nspec, d_vsize, d_namelen, d_grdidlen, d_time
     integer :: v_idtst, v_vertst, v_nk, v_nth, v_ptloc, v_ptnme, v_time, v_ww3time
@@ -1632,6 +1632,10 @@ CONTAINS
     integer :: curdate(8), refdate(8),ierr
     double precision :: outjulday
     ! unit number for log file
+    INTEGER :: NDSOPLOG
+
+
+    ! INDICATOR LOG
     INTEGER :: NDSOPLOG
 
     !If first pass, or if you are writting a file for every time-step: 
@@ -1894,8 +1898,8 @@ CONTAINS
     ncerr = nf90_close(fh)
     if (nf90_err(ncerr) .ne. 0) return
 
-    ! create indicator log file after NetCDF file is written
-    ! re-use NDSOP for NDSOPLOG
+    ! WRITE INDICATOR LOG AT THE END OF NETCDF OUTPUT
+    ! RE-USE NDSOP FOR NDSOPLOG
     IF (timestep_only .EQ. 1) THEN
       NDSOPLOG = NDSOP
       OPEN(NDSOPLOG,FILE=path(:LEN_TRIM(path))//'log.'//TRIM(fname)//'.txt', &
@@ -2234,7 +2238,7 @@ CONTAINS
 
     ! DEFINED A LOCAL FNMPRE TO AVOID CHANGE THE GLOBAL VALUE
     CHARACTER(LEN=256)       :: FNMPRE_LOCAL
-	
+
     !/
     !/ ------------------------------------------------------------------- /
     !/
