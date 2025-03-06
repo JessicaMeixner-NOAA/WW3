@@ -775,8 +775,19 @@ contains
       !--------------------
 
       FNMGRD = trim(nml_output_path%grd_out)
+      if (FNMGRD(len_trim(FNMGRD):len_trim(FNMGRD)) /= '/') then
+        FNMGRD = trim(FNMGRD) // '/'
+      end if
+
       FNMPNT = trim(nml_output_path%pnt_out)
+      if (FNMPNT(len_trim(FNMPNT):len_trim(FNMPNT)) /= '/') then
+        FNMPNT = trim(FNMPNT) // '/'
+      end if
+
       FNMRST = trim(nml_output_path%rst_out)
+      if (FNMRST(len_trim(FNMRST):len_trim(FNMRST)) /= '/') then
+        FNMRST = trim(FNMRST) // '/'
+      end if
 
     end if ! flgnml
 
