@@ -471,10 +471,11 @@ CONTAINS
     else
       IF (LEN_TRIM(FNMRST) .EQ. 0) THEN
         FNMPRE_LOCAL = FNMPRE
-      ELSE 
+      ELSE
         FNMPRE_LOCAL = FNMRST
-      ENDIF 
-      
+      END IF
+
+
       I      = LEN_TRIM(FILEXT)
       J      = LEN_TRIM(FNMPRE_LOCAL)
       !

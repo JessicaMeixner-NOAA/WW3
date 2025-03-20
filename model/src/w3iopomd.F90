@@ -1649,6 +1649,10 @@ CONTAINS
     ! unit number for log file
     INTEGER :: NDSOPLOG
 
+
+    ! INDICATOR LOG
+    INTEGER :: NDSOPLOG
+
     !If first pass, or if you are writting a file for every time-step: 
     IF ( IPASS.EQ.1  .OR. timestep_only.EQ.1 ) THEN 
       ! Create the netCDF file.
@@ -1973,6 +1977,7 @@ CONTAINS
     ! DEFINED A LOCAL FNMPRE TO AVOID CHANGE THE GLOBAL VALUE
     CHARACTER(LEN=256)       :: FNMPRE_LOCAL
     CHARACTER(LEN=124)       :: FNAME
+
 
 #ifdef W3_S
     CALL STRACE (IENT, 'W3IOPON')
