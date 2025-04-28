@@ -664,6 +664,7 @@ CONTAINS
       STOP
     ENDIF
 #endif
+
     !
     ! 1.c Open files without unpacking MDS ,,,
     !
@@ -1342,10 +1343,10 @@ CONTAINS
     END DO
     !Li   END DO
 #ifdef W3_DEBUGSTP
-      WRITE(740+IAPROC,*) 'w3initmd 1: max/min(WLVeff)=', max_val, min_val
-      FLUSH(740+IAPROC)
-      max_val = 0
-      min_val = 0
+    WRITE(740+IAPROC,*) 'w3initmd 1: max/min(WLVeff)=', max_val, min_val
+    FLUSH(740+IAPROC)
+    max_val = 0
+    min_val = 0
 #endif
     DO JSEA=1, NSEAL
       CALL INIT_GET_ISEA(ISEA, JSEA)
@@ -2185,7 +2186,7 @@ CONTAINS
          STMAXE, STMAXD, HMAXE, HCMAXE, HMAXD,     &
          HCMAXD, QP, PTHP0, PQP, PPE, PGW, PSW,    &
          PTM1, PT1, PT2, PEP, WBT, CX, CY,         &
-         TAUOCX, TAUOCY, WNMEAN
+         TAUOCX, TAUOCY, WNMEAN, QKK
 #endif
 
     USE W3ADATMD, ONLY: USSHX, USSHY
@@ -3453,6 +3454,20 @@ CONTAINS
 #ifdef W3_MPI
         END IF
         !
+        IF ( FLGRDALL( 8, 6) ) THEN
+          IH     = IH + 1
+          IT     = IT + 1
+          CALL MPI_SEND_INIT (QKK  (1),NSEALM , MPI_REAL, IROOT,   &
+               IT, MPI_COMM_WAVE, IRQGO(IH), IERR)
+#endif
+#ifdef W3_MPIT
+          WRITE (NDST,9011) IH, ' 8/06', IROOT, IT, IRQGO(IH), IERR
+#endif
+#ifdef W3_MPI
+        END IF
+#endif
+        !
+#ifdef W3_MPI
         IF ( FLGRDALL( 9, 1) ) THEN
           IH     = IH + 1
           IT     = IT + 1
@@ -4703,6 +4718,20 @@ CONTAINS
 #ifdef W3_MPI
           END IF
           !
+          IF ( FLGRDALL( 8, 6) ) THEN
+            IH     = IH + 1
+            IT     = IT + 1
+            CALL MPI_RECV_INIT (QKK  (I0),1,WW3_FIELD_VEC, IFROM, IT,  &
+                 MPI_COMM_WAVE, IRQGO2(IH), IERR )
+#endif
+#ifdef W3_MPIT
+            WRITE (NDST,9011) IH, ' 8/06', IFROM, IT, IRQGO2(IH), IERR
+#endif
+#ifdef W3_MPI
+          END IF
+#endif
+          !
+#ifdef W3_MPI
           IF ( FLGRDALL( 9, 1) ) THEN
             IH     = IH + 1
             IT     = IT + 1
