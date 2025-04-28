@@ -230,7 +230,7 @@ CONTAINS
          NMPERR, MDSS
     USE W3TRIAMD
 #ifdef W3_MPI
-    USE WMMDATMD, ONLY: MPI_COMM_GRD, MPI_COMM_MWAVE
+    USE WMMDATMD, ONLY: MPI_COMM_GRD, MPI_COMM_MWAVE, CROOT
 #endif
     !
     IMPLICIT NONE
@@ -500,7 +500,7 @@ CONTAINS
 #endif
       !
 #ifdef W3_SHRD
-      CALL W3IOPP ( MDATAS(J)%NRUPTS, XP, YP, PN, J, 1)
+      CALL W3IOPP ( MDATAS(J)%NRUPTS, XP, YP, PN, J, 1, 0)
 #endif
       !
       ! 3.d.2 Distributed memory version
@@ -535,7 +535,7 @@ CONTAINS
 #endif
         !
 #ifdef W3_MPI
-        CALL W3IOPP ( MDATAS(J)%NRUPTS, XP, YP, PN, J, MPI_COMM_MWAVE)
+        CALL W3IOPP ( MDATAS(J)%NRUPTS, XP, YP, PN, J, MPI_COMM_MWAVE, CROOT-1)
 #endif
         !
 #ifdef W3_MPI

@@ -2352,12 +2352,19 @@ CONTAINS
       ! ..... Model initialization
       !
       IF ( MDSS.NE.MDSO .AND. NMPSC2.EQ.IMPROC ) WRITE (MDSS,982)
-
+#ifdef W3_MPI
       CALL W3INIT ( I, .TRUE., MNAMES(I), MDS(:,I), NTRACE(:,I),    &
            ODAT(:,I),                          &
            FLGRD(:,:,I),FLGR2(:,:,I),FLGD(:,I),FLG2(:,I),  &
            OT2(I)%NPTS, OT2(I)%X, OT2(I)%Y, OT2(I)%PNAMES, &
-           IPRT(:,I), LPRT(I), MPI_COMM_LOC)
+           IPRT(:,I), LPRT(I), MPI_COMM_LOC, CROOT)
+#else 
+       CALL W3INIT ( I, .TRUE., MNAMES(I), MDS(:,I), NTRACE(:,I),    &
+           ODAT(:,I),                          &
+           FLGRD(:,:,I),FLGR2(:,:,I),FLGD(:,I),FLG2(:,I),  &
+           OT2(I)%NPTS, OT2(I)%X, OT2(I)%Y, OT2(I)%PNAMES, &
+           IPRT(:,I), LPRT(I), 1, 0)
+#endif
       !
       ! ..... Finalize I/O file hook up
       !
@@ -5483,12 +5490,19 @@ CONTAINS
       ! ..... Model initialization
       !
       IF ( MDSS.NE.MDSO .AND. NMPSC2.EQ.IMPROC ) WRITE (MDSS,982)
-
+#ifdef W3_MPI
       CALL W3INIT ( I, .TRUE., MNAMES(I), MDS(:,I), NTRACE(:,I),    &
            ODAT(:,I),                          &
            FLGRD(:,:,I),FLGR2(:,:,I),FLGD(:,I),FLG2(:,I),  &
            OT2(I)%NPTS, OT2(I)%X, OT2(I)%Y, OT2(I)%PNAMES, &
-           IPRT(:,I), LPRT(I), MPI_COMM_LOC)
+           IPRT(:,I), LPRT(I), MPI_COMM_LOC, CROOT-1)
+#else 
+      CALL W3INIT ( I, .TRUE., MNAMES(I), MDS(:,I), NTRACE(:,I),    &
+           ODAT(:,I),                          &
+           FLGRD(:,:,I),FLGR2(:,:,I),FLGD(:,I),FLG2(:,I),  &
+           OT2(I)%NPTS, OT2(I)%X, OT2(I)%Y, OT2(I)%PNAMES, &
+           IPRT(:,I), LPRT(I), 1, 0)
+#endif   
       !
       ! ..... Finalize I/O file hook up
       !

@@ -236,7 +236,7 @@ CONTAINS
   !>
   !> @author H. L. Tolman  @date 02-Sep-2012
   !>
-  SUBROUTINE W3IOPP ( NPT, XPT, YPT, PNAMES, IMOD, MPI_COMM_IOPP )
+  SUBROUTINE W3IOPP ( NPT, XPT, YPT, PNAMES, IMOD, MPI_COMM_IOPP, iCROOT)
     !/
     !/                  +-----------------------------------+
     !/                  | WAVEWATCH III           NOAA/NCEP |
@@ -369,7 +369,7 @@ CONTAINS
     !/ ------------------------------------------------------------------- /
     !/ Parameter list
     !/
-    INTEGER, INTENT(IN)          :: NPT, IMOD, MPI_COMM_IOPP
+    INTEGER, INTENT(IN)          :: NPT, IMOD, MPI_COMM_IOPP, iCROOT
     REAL, INTENT(INOUT)          :: XPT(NPT), YPT(NPT)
     CHARACTER(LEN=40),INTENT(IN) :: PNAMES(NPT)
     !/
@@ -464,7 +464,7 @@ CONTAINS
     ! Loop over output points if saved weights do not exist
     !
     IF (.NOT. pnt_wght_exists) THEN
-      if (iaproc .eq. 1) then
+      if (iaproc .eq. iCROOT+1) then
         DO IPT=1, NPT
           !
 #ifdef W3_T
@@ -546,23 +546,23 @@ CONTAINS
       ! Broadcast weight info from iaproc=1 to all MPI tasks:
 
       !First broadcast NOPTS, used in the next calls:
-      CALL MPI_BCAST(NOPTS,1,MPI_INTEGER,0,MPI_COMM_IOPP,IERR_MPI)
+      CALL MPI_BCAST(NOPTS,1,MPI_INTEGER,iCROOT,MPI_COMM_IOPP,IERR_MPI)
       CALL MPI_Barrier(MPI_COMM_IOPP,IERR_MPI)
 
-      CALL MPI_BCAST(PTLOC,2*NPT,MPI_REAL,0,MPI_COMM_IOPP,IERR_MPI)
-      CALL MPI_BCAST(PTIFAC,4*NPT,MPI_REAL,0,MPI_COMM_IOPP,IERR_MPI)
-      CALL MPI_BCAST(IPTINT(:,:,1:NOPTS),2*4*NOPTS,MPI_INTEGER,0,MPI_COMM_IOPP,IERR_MPI)
+      CALL MPI_BCAST(PTLOC,2*NPT,MPI_REAL,iCROOT,MPI_COMM_IOPP,IERR_MPI)
+      CALL MPI_BCAST(PTIFAC,4*NPT,MPI_REAL,iCROOT,MPI_COMM_IOPP,IERR_MPI)
+      CALL MPI_BCAST(IPTINT(:,:,1:NOPTS),2*4*NOPTS,MPI_INTEGER,iCROOT,MPI_COMM_IOPP,IERR_MPI)
 
       !Send point names individually
       DO IPT=1, NOPTS
-        CALL MPI_BCAST(PTNME(IPT),40,MPI_CHARACTER,0,MPI_COMM_IOPP,IERR_MPI)
+        CALL MPI_BCAST(PTNME(IPT),40,MPI_CHARACTER,iCROOT,MPI_COMM_IOPP,IERR_MPI)
       ENDDO
 
       CALL MPI_Barrier(MPI_COMM_IOPP,IERR_MPI)
 #endif
     ELSE
       ! Saved weight file exists, read weights from file
-      IF ( IAPROC .EQ. 1 ) THEN
+      IF ( IAPROC .EQ. iCROOT+1 ) THEN
         ! Open the netCDF file.
         ncerr = nf90_open(filename, NF90_NOWRITE, fh)
         if (nf90_err(ncerr) .ne. 0) return
@@ -627,16 +627,16 @@ CONTAINS
       ! Broadcast weight info from iaproc=1 to all MPI tasks:
 
       !First broadcast NOPTS, used in the next calls:
-      CALL MPI_BCAST(NOPTS,1,MPI_INTEGER,0,MPI_COMM_IOPP,IERR_MPI)
+      CALL MPI_BCAST(NOPTS,1,MPI_INTEGER,iCROOT,MPI_COMM_IOPP,IERR_MPI)
       CALL MPI_Barrier(MPI_COMM_IOPP,IERR_MPI)
 
-      CALL MPI_BCAST(PTLOC,2*NPT,MPI_REAL,0,MPI_COMM_IOPP,IERR_MPI)
-      CALL MPI_BCAST(PTIFAC,4*NPT,MPI_REAL,0,MPI_COMM_IOPP,IERR_MPI)
-      CALL MPI_BCAST(IPTINT(:,:,1:NOPTS),2*4*NOPTS,MPI_INTEGER,0,MPI_COMM_IOPP,IERR_MPI)
+      CALL MPI_BCAST(PTLOC,2*NPT,MPI_REAL,iCROOT,MPI_COMM_IOPP,IERR_MPI)
+      CALL MPI_BCAST(PTIFAC,4*NPT,MPI_REAL,iCROOT,MPI_COMM_IOPP,IERR_MPI)
+      CALL MPI_BCAST(IPTINT(:,:,1:NOPTS),2*4*NOPTS,MPI_INTEGER,iCROOT,MPI_COMM_IOPP,IERR_MPI)
 
       !Send point names individually
       DO IPT=1, NOPTS
-        CALL MPI_BCAST(PTNME(IPT),40,MPI_CHARACTER,0,MPI_COMM_IOPP,IERR_MPI)
+        CALL MPI_BCAST(PTNME(IPT),40,MPI_CHARACTER,iCROOT,MPI_COMM_IOPP,IERR_MPI)
       ENDDO
 
       CALL MPI_Barrier(MPI_COMM_IOPP,IERR_MPI)

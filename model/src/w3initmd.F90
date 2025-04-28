@@ -160,7 +160,7 @@ CONTAINS
   !> @author H. L. Tolman  @date 03-Sep-2012
   !>
   SUBROUTINE W3INIT ( IMOD, IsMulti, FEXT, MDS, MTRACE, ODAT, FLGRD,  FLGR2, FLGD, &
-       FLG2, NPT, XPT, YPT, PNAMES, IPRT, PRTFRM, MPI_COMM, FLAGSTIDEIN)
+       FLG2, NPT, XPT, YPT, PNAMES, IPRT, PRTFRM, MPI_COMM, iCROOT, FLAGSTIDEIN)
     !/
     !/                  +-----------------------------------+
     !/                  | WAVEWATCH III           NOAA/NCEP |
@@ -458,7 +458,7 @@ CONTAINS
     !/
     INTEGER, INTENT(IN)           :: IMOD, MDS(15), MTRACE(2),      &
          ODAT(40),NPT, IPRT(6),&
-         MPI_COMM
+         MPI_COMM, iCROOT
     LOGICAL, INTENT(IN)           :: IsMulti
     REAL, INTENT(INOUT)           :: XPT(NPT), YPT(NPT)
     LOGICAL, INTENT(INOUT)        :: FLGRD(NOGRP,NGRPP), FLGD(NOGRP),&
@@ -1240,9 +1240,9 @@ CONTAINS
     ! 4.d Preprocessing for point output.
     !
 #ifdef W3_MPI
-    IF ( FLOUT(2) ) CALL W3IOPP ( NPT, XPT, YPT, PNAMES, IMOD, MPI_COMM_WAVE )
+    IF ( FLOUT(2) ) CALL W3IOPP ( NPT, XPT, YPT, PNAMES, IMOD, MPI_COMM_WAVE, iCROOT)
 #else
-    IF ( FLOUT(2) ) CALL W3IOPP ( NPT, XPT, YPT, PNAMES, IMOD, 1 )
+    IF ( FLOUT(2) ) CALL W3IOPP ( NPT, XPT, YPT, PNAMES, IMOD, 1, 0)
 #endif
 #ifdef W3_PDLIB
     CALL DEALLOCATE_PDLIB_GLOBAL(IMOD)
