@@ -115,6 +115,8 @@ set(netcdf_programs ww3_ounf ww3_ounp ww3_bounc ww3_trnc ww3_prnc)
 if("OASIS" IN_LIST switches)
   find_package(OASIS REQUIRED)
   target_link_libraries(ww3_lib PUBLIC OASIS::OASIS)
+  find_package(MPI REQUIRED COMPONENTS Fortran)
+  target_link_libraries(ww3_lib PUBLIC MPI::MPI_Fortran)
 endif()
 
 if(NETCDF)
@@ -165,15 +167,6 @@ if("OMPG" IN_LIST switches)
   target_link_libraries(ww3_lib PUBLIC OpenMP::OpenMP_Fortran)
 endif()
 
-if("MPI" IN_LIST switches)
-  find_package(MPI REQUIRED COMPONENTS Fortran)
-  target_link_libraries(ww3_lib PUBLIC MPI::MPI_Fortran)
-endif()
-
-if("PIO" IN_LIST switches)
-  target_sources(ww3_lib PRIVATE ${pio_src})
-endif()
-
 # Handle PDLIB, SCRIP, SCRIPNC build files directly instead of through configuration file
 if("PDLIB" IN_LIST switches)
   if("SCOTCH" IN_LIST switches)
@@ -194,6 +187,15 @@ if("PDLIB" IN_LIST switches)
   else()
     message(FATAL_ERROR "PDLIB requires METIS or SCOTCH library for domain decomposition")
   endif()
+endif()
+
+if("MPI" IN_LIST switches)
+  find_package(MPI REQUIRED COMPONENTS Fortran)
+  target_link_libraries(ww3_lib PUBLIC MPI::MPI_Fortran)
+endif()
+
+if("PIO" IN_LIST switches)
+  target_sources(ww3_lib PRIVATE ${pio_src})
 endif()
 
 if("SCRIP" IN_LIST switches)
