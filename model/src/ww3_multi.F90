@@ -96,7 +96,7 @@ PROGRAM W3MLTI
 #endif
   !/
 #ifdef W3_MPI
-  USE MPI
+  use mpi_f08
 #endif
   !/
   IMPLICIT NONE
@@ -104,7 +104,8 @@ PROGRAM W3MLTI
   !/ ------------------------------------------------------------------- /
   !/ Local parameters
   !/
-  INTEGER              :: I, MPI_COMM = -99
+  INTEGER              :: I
+  type(MPI_COMM)       :: mpicomm
   INTEGER, ALLOCATABLE :: TEND(:,:)
   LOGICAL              :: FLGNML
 #ifdef W3_MPI
@@ -119,7 +120,7 @@ PROGRAM W3MLTI
   ! 0.  Initialization necessary for driver
   ! 0.a General I/O: all can start with initialization in wmmdatmd
   !
-  ! 0.b MPI environment: Here, we use MPI_COMM_WORLD
+  ! 0.b MPI environment: Here, we use mpi_f08_COMM_WORLD
   !
 #ifdef W3_OMPH
   FLHYBR = .TRUE.
@@ -135,9 +136,9 @@ PROGRAM W3MLTI
   ENDIF
 #endif
 #ifdef W3_MPI
-  MPI_COMM = MPI_COMM_WORLD
-  CALL MPI_COMM_SIZE ( MPI_COMM, NMPROC, IERR_MPI )
-  CALL MPI_COMM_RANK ( MPI_COMM, IMPROC, IERR_MPI )
+  mpicomm = MPI_COMM_WORLD
+  CALL MPI_COMM_SIZE ( mpicomm, NMPROC, IERR_MPI )
+  CALL MPI_COMM_RANK ( mpicomm, IMPROC, IERR_MPI )
   IMPROC = IMPROC + 1
 #endif
   !
@@ -176,9 +177,9 @@ PROGRAM W3MLTI
   !
   INQUIRE(FILE="ww3_multi.nml", EXIST=FLGNML)
   IF (FLGNML) THEN
-    CALL WMINITNML ( MDSI, MDSO, MDSS, 10, MDSE, 'ww3_multi.nml', MPI_COMM )
+    CALL WMINITNML ( MDSI, MDSO, MDSS, 10, MDSE, 'ww3_multi.nml', mpicomm )
   ELSE
-    CALL WMINIT ( MDSI, MDSO, MDSS, 10, MDSE, 'ww3_multi.inp', MPI_COMM )
+    CALL WMINIT ( MDSI, MDSO, MDSS, 10, MDSE, 'ww3_multi.inp', mpicomm )
   END IF
   !
 
@@ -207,7 +208,7 @@ PROGRAM W3MLTI
   IF ( IMPROC .EQ. NMPSCR ) WRITE (*,999)
   !
 #ifdef W3_MPI
-  CALL MPI_BARRIER ( MPI_COMM, IERR_MPI )
+  CALL MPI_BARRIER ( mpicomm, IERR_MPI )
   CALL MPI_FINALIZE  ( IERR_MPI )
 #endif
   !
