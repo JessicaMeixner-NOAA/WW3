@@ -500,7 +500,7 @@ CONTAINS
     use w3odatmd        , only : logfile_is_assigned, verboselog
     use w3timemd        , only : set_user_timestring
     !
-#ifdef W3_MPI
+#ifdef W3_MPI 
     use mpi_f08
 #endif
     !/
@@ -1028,7 +1028,10 @@ CONTAINS
       DTGA   = DTTST / REAL(NT)
       IF ( DTTST .EQ. 0. ) THEN
         IT0    = 0
-        IF ( .NOT.FLZERO ) ITIME  = ITIME - 1
+        IF ( .NOT.FLZERO ) THEN
+          ITIME  = ITIME - 1
+          ITSTEP = ITSTEP - 1
+        END IF
         NT     = 0
       ELSE
         IT0    = 1
@@ -1072,6 +1075,7 @@ CONTAINS
         call print_memcheck(memunit, 'memcheck_____:'//' WW3_WAVE TIME LOOP 0')
         !
         ITIME  = ITIME + 1
+        ITSTEP = ITSTEP + 1
         !
         DTG    = REAL(NINT(DTGA+DTRES+0.0001))
         DTRES  = DTRES + DTGA - DTG
